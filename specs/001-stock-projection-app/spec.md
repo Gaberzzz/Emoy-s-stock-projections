@@ -4,7 +4,7 @@
 
 **Created**: 2026-11-27
 
-**Status**: Draft
+**Status**: Draft (clarified)
 
 **Input**: User description: "this app will be a mobile app version of this excel file at /Stocks-Projection.xlsx. It is in the repo. Ask me questions to get this started."
 
@@ -28,6 +28,14 @@ remaining, new NE USD 135.20).
 
 The mobile app reproduces these calculations on a phone, so the user can build and review projections
 without opening the spreadsheet.
+
+## Clarifications
+
+### Session 2026-11-27
+
+- Q: Sales history or a single what-if sale? → A: Both — a per-position sales history plus a separate "what if I sell?" preview.
+- Q: Live market prices? → A: Show the current price for reference only, if a no-cost source is available; otherwise no live prices.
+- Q: Accounts and data location? → A: Personal app, data stored only on the phone, no login.
 
 ## User Scenarios & Testing *(mandatory)*
 
@@ -86,7 +94,8 @@ projections accurate after the user acts on them.
 2. **Given** a recorded sale, **When** the user deletes it, **Then** the position returns to its prior state.
 3. **Given** a recorded sale that drives NE to zero or below, **When** results are shown, **Then** the app states that cost is fully recovered and that remaining shares are "house money" instead of showing a meaningless multiple.
 
-Sales history scope: [NEEDS CLARIFICATION: Should the app keep a full history of sales per position (a transaction log the user can review/undo), or only apply a single what-if "recovery point" like the workbook note?]
+4. **Given** a position, **When** the user enters a hypothetical sale in the "what if I sell?" preview, **Then** the app shows the resulting remaining shares, new NE and updated analyses **without** changing the saved position, and offers to record it as an actual sale.
+5. **Given** several recorded sales, **When** the user opens the sales history, **Then** each sale is listed with date, shares and price, and any one of them can be removed.
 
 ---
 
@@ -129,12 +138,13 @@ a collection of such sheets.
 - **FR-006**: Band thresholds MUST match the workbook by default (Classification: 1, 1.5, 2.5; To Play: 0 and 350). The To Play "Profit Zone" threshold (350 in the workbook) MUST be editable per position.
 - **FR-007**: Results MUST update immediately when any input changes.
 - **FR-008**: Each Classification and To Play value MUST show its band name and a distinct color, plus a legend explaining each band's rule.
-- **FR-009**: Users MUST be able to record a sale (shares, price); the app MUST recompute remaining TS and new NE as in the workbook's recovery-point example.
+- **FR-009**: Users MUST be able to record actual sales (shares, price, date); the app MUST keep a sales history per position, recompute remaining TS and new NE as in the workbook's recovery-point example, and let the user remove any recorded sale.
+- **FR-009a**: Users MUST be able to preview a hypothetical sale ("what if I sell?") that shows the resulting TS, NE and analyses without changing the saved position, and convert it into a recorded sale with one action.
 - **FR-010**: Users MUST be able to keep multiple positions, and all inputs MUST persist between app launches.
 - **FR-011**: Input validation MUST reject non-numeric, zero or negative shares/prices with an inline message.
 - **FR-012**: Every analysis screen MUST show a notice that the projections are informational what-if calculations, not financial advice.
-- **FR-013**: Live market prices: [NEEDS CLARIFICATION: Should the app fetch the current market price for a ticker (e.g. to show it next to the TSRs), or remain a pure calculator where the user types every number, like the workbook?]
-- **FR-014**: Accounts and sync: [NEEDS CLARIFICATION: Is this a personal app with data stored only on the phone, or does it need user accounts so data syncs across devices / can be used by other people?]
+- **FR-013**: The app SHOULD show the current market price of a position's ticker next to its TSRs, **for reference only** (it is not used in any calculation), together with its source and when it was retrieved. This applies only if a no-cost price source can be used within its license terms; if none can, v1 ships without live prices and remains a pure calculator. When offline or the price is stale, the app shows the last price with its time, and all calculations keep working.
+- **FR-014**: The app is personal: there are no accounts or login, and all position data is stored only on the user's phone. No position data leaves the device.
 - **FR-015**: The app MUST be available on both Android and iOS phones.
 
 ### Key Entities
@@ -142,7 +152,9 @@ a collection of such sheets.
 - **Position**: One stock being analysed — name/ticker, optional capital note, Profit Zone threshold, % sold steps; has many Lots, TSRs and Sales.
 - **Lot**: A purchase — number of shares, average price.
 - **Target Sell Rate (TSR)**: A hypothetical sell price per share.
-- **Sale (recovery point)**: An actual sale — shares sold, sell price, date; reduces TS and NE.
+- **Sale (recovery point)**: An actual sale — shares sold, sell price, date; reduces TS and NE. Positions keep a history of sales.
+- **What-if sale**: A temporary, unsaved sale used only to preview its effect.
+- **Market price** (optional, FR-013): Last known price for a ticker, with source and retrieval time; display only.
 - **Derived results** (not stored): TS, NE, weighted AP, GP, NP, RD, Realized, M + Classification band, x + To Play band.
 
 ## Success Criteria *(mandatory)*
@@ -163,3 +175,6 @@ a collection of such sheets.
 - Row 9 of the workbook (an empty lot showing RD = TSR) is a spreadsheet artifact; empty lots are not shown.
 - The app does not execute trades or connect to brokerage accounts.
 - Projections are deterministic what-if calculations on user inputs; there is no forecasting model.
+- Because data lives only on the phone, losing or resetting the phone loses the data; backup/export is out of scope for v1 (a candidate for a later version).
+- All calculations work fully offline; only the optional reference price needs a connection.
+- Distribution to the public app stores is out of scope for v1; the app is for the owner's personal use.
