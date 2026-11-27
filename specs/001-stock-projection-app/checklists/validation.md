@@ -9,7 +9,7 @@
 |-------|--------|
 | `npm run lint` | Pass |
 | `npm run typecheck` (strict) | Pass |
-| `npm test` | Pass (116 tests, 17 suites) |
+| `npm test` | Pass (116 tests, 18 suites) |
 | Workbook reference fixture (every Projection, Liquidation, Classification and To Play cell, plus the recovery-point example) | Pass, to 2 dp |
 | `expo export` for Android and iOS (Hermes bundles) | Pass |
 
