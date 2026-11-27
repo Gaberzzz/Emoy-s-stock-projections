@@ -61,9 +61,13 @@ Rationale: a shared, public app handles other people's data and trust.
 
 - Python (3.11+) is the language for data ingestion, modeling and the backend API; pytest is
   the test framework.
-- The product MUST ship as a mobile app on both Android and iOS with feature parity; the mobile
-  framework is chosen in `/speckit-plan` and MUST support both platforms from one codebase or
-  justify otherwise under Principle IV.
+- The product MUST ship as a mobile app on both Android and iOS with feature parity, built from
+  a single React Native codebase written in TypeScript (strict mode). Platform-specific native
+  code is allowed only when React Native cannot meet a requirement, and MUST be justified under
+  Principle IV.
+- Mobile client logic MUST be tested with Jest and React Native Testing Library.
+- The mobile client MUST NOT compute projections itself; it displays results produced and
+  versioned by the Python backend.
 - The mobile client MUST degrade gracefully when offline or when data is stale, showing the
   last-updated time instead of failing silently.
 
@@ -86,4 +90,4 @@ Rationale: a shared, public app handles other people's data and trust.
 - Reviewers MUST verify compliance with this constitution on every pull request; added
   complexity MUST be justified in writing.
 
-**Version**: 1.0.0 | **Ratified**: 2026-11-27 | **Last Amended**: 2026-11-27
+**Version**: 1.1.0 | **Ratified**: 2026-11-27 | **Last Amended**: 2026-11-27
