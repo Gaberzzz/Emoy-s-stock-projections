@@ -27,7 +27,7 @@ export function ToPlayTab({
       <ResultGrid
         steps={steps}
         tsrs={tsrs}
-        cellHeight={56}
+        cellHeight={74}
         describeCell={(i, j) => {
           const c = grid[i]![j]!;
           return `${formatPercent(c.step)} sold at ${formatPrice(c.tsr)}: ${formatMoney(c.value.x)}, ${BAND_LABEL[c.value.band]}`;

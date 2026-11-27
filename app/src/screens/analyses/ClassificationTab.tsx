@@ -31,7 +31,7 @@ export function ClassificationTab({ result }: { result: CalcResult }) {
       <ResultGrid
         steps={steps}
         tsrs={tsrs}
-        cellHeight={56}
+        cellHeight={74}
         describeCell={(i, j) => {
           const c = grid[i]![j]!;
           const { m, band } = c.value;
